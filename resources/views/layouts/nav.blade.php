@@ -45,11 +45,6 @@
                     </div>
                 </li>
             </ul>
-
-            {{-- <hr class="d-md-none text-white-50">
-
-            {{-- button untuk kehalaman profile --}}
-            {{-- <a href="{{ route('profile') }}" class="btn btn-outline-light my-2 ms-md-auto"><i class="bi-person-circle me-1"></i> My Profile</a> --}}
         </div>
     </div>
 </nav>

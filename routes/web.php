@@ -30,7 +30,7 @@ Auth::routes();
 // gruping route untuk proteksi dengan midleware, agar tiap halaman tidak bisa langsung diakses, harus lewat login
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::get('profile', [ProfileController::class])->name('profile');
+    Route::get('profile', ProfileController::class)->name('profile');
     Route::resource('employees', EmployeeController::class);
 });
 
