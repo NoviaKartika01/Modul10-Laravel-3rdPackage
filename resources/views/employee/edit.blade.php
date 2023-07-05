@@ -3,7 +3,7 @@
     {{-- untuk isi dari conten --}}
     <div class="container-sm mt-5">
         {{-- membuat form, dimana data akan dikirim ke route 'employee.store' menggunakan metode POST --}}
-        <form action="{{ route('employees.update', ['employee' => $employee->id]) }}" method="POST">
+        <form action="{{ route('employees.update', ['employee' => $employee->id]) }}" method="POST" enctype="multipart/form-data"> {{--ini ditambah enctype}}
             {{-- menerapkan CSRF Protection --}}
             @csrf
             @method('PUT')
@@ -82,7 +82,48 @@
                                 <div class="text-danger"><small>{{ $message }}</small></div>
                             @enderror
                         </div>
+                        {{-- menambahkan untuk edit file CV --}}
+                        <div class="col-md-12 mb-3">
+                            <label for="CV" class="form-label">Curriculum Vitae (CV)</label>
+                            @if ($employee->original_filename)
+                                <h5>{{ $employee->original_filename }}</h5>
+                                <a href="{{ route('employees.downloadFile', ['employeeId' => $employee->id]) }}" class="btn btn-primary btn-sm mt-2">
+                                    <i class="bi bi-download me-1"></i> Download CV
+                                </a>
+                            @else
+                                <h5>Tidak ada</h5>
+                            @endif
+                        </div>
 
+                        <div class="col-md-12 mb-3">
+                            <label for="cv" class="form-label">{{--Upload New CV--}}</label>
+                            <input type="file" class="form-control @error('cv') is-invalid @enderror" name="cv" id="cv">
+                            @error('cv')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                            @if ($employee->cv)
+                                <small class="text-muted">CV already uploaded: <a href="{{ asset('storage/' . $employee->cv) }}" target="_blank" rel="noopener noreferrer">{{ $employee->cv }}</a></small>
+                            @endif
+                        </div>
+
+                        {{-- jika file sudah ada maka bisa di download --}}
+                        {{-- <div class="col-md-12 mb-3">
+                            <label for="CV" class="form-label">Curriculum Vitae (CV)</label>
+                            @if ($employee->original_filename)
+                                <h5>{{ $employee->original_filename }}</h5>
+                                <a href="{{ route('employees.downloadFile', ['employeeId' => $employee->id]) }}" class="btn btn-primary btn-sm mt-2">
+                                    <i class="bi bi-download me-1"></i> Download CV
+                                </a>
+                            @else
+                                <h5>Tidak ada</h5>
+                            @endif
+
+                        </div> --}}
+                        {{-- bagian untuk menambah file --}}
+                        {{-- <div class="col-md-12 mb-3">
+                            <label for="cv" class="form-label">Curriculum Vitae (CV)</label>
+                            <input type="file" class="form-control @error('cv ') is-invalid @enderror" name="cv" id="cv">
+                        </div> --}}
                     </div>
                     <hr>
                     <div class="row">
@@ -93,7 +134,7 @@
                         </div>
                         <div class="col-md-6 d-grid">
                             {{-- memebero tombol Save yang menunjukkan bahwa data pada form akan di submit --}}
-                            <button type="sumbit" class="btn btn-dark btn-lg mat-3"><i class="bi-check-circle me-2">
+                            <button type="sumbit" class="btn btn-dark btn-lg mt-3"><i class="bi-check-circle me-2">
                                     Edit</i></button>
                         </div>
                     </div>

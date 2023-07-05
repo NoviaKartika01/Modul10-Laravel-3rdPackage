@@ -3,7 +3,7 @@
      {{-- untuk isi dari conten --}}
     <div class="container-sm my-5">
         {{-- membuat form, dimana data akan dikirim ke route 'employee.store' menggunakan metode POST --}}
-        <form action="{{ route('employees.store') }}" method="POST">
+        <form action="{{ route('employees.store') }}" method="POST" enctype="multipart/form-data">
             {{-- menerapkan CSRF Protection --}}
             @csrf
             <div class="row justify-content-center">
@@ -71,7 +71,11 @@
                                 <div class="text-danger"><small>{{ $message }}</small></div>
                             @enderror
                         </div>
-
+                        {{-- Bagian yang ditambah untuk upload file --}}
+                        <div class="col-md-12 mb-3">
+                            <label for="cv" class="form-label">Curriculum Vitae (CV)</label>
+                            <input type="file" class="form-control" name="cv" id="cv">
+                        </div>
                     </div>
                     <hr>
                     <div class="row">
@@ -81,7 +85,7 @@
                         </div>
                         <div class="col-md-6 d-grid">
                             {{-- memebero tombol Save yang menunjukkan bahwa data pada form akan di submit --}}
-                            <button type="sumbit" class="btn btn-dark btn-lg mat-3"><i class="bi-check-circle me-2"> Save</i></button>
+                            <button type="sumbit" class="btn btn-dark btn-lg mt-3"><i class="bi-check-circle me-2"> Save</i></button>
                         </div>
                     </div>
                 </div>
