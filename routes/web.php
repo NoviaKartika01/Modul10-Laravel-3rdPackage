@@ -130,6 +130,15 @@ Route::get('/delete-public-file', function(Request $request) {
     return 'Deleted';
 });
 
+// server-side processing Data Tables
+Route::get('getEmployees', [EmployeeController::class, 'getData'])->name('employees.getData');
+
+// Untuk ke rute export file excel
+Route::get('exportExcel', [EmployeeController::class, 'exportExcel'])->name('employees.exportExcel');
+
+// untuk ke rute export file pdf
+Route::get('exportPdf', [EmployeeController::class, 'exportPdf'])->name('employees.exportPdf');
+
 // // Route HomeController untuk halaman Home
 // Route::get('home', [HomeController::class, 'index'])->name('home');
 

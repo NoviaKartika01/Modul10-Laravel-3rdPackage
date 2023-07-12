@@ -14,7 +14,11 @@ class EmployeeSeeder extends Seeder
      */
     public function run(): void
     {
-        Employee::factory()->count(10)->create();
+        Employee::factory()->count(200)->create();
+    }
+}
+
+        // Employee::factory()->count(10)->create();
 
         // DB::table('employees')->insert([
         //     [
@@ -39,5 +43,3 @@ class EmployeeSeeder extends Seeder
         //         'position_id' => 3
         //     ],
         // ]);
-    }
-}

@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+// untuk sweet alert
+use RealRashid\SweetAlert\Facades\Alert;
+// untuk export file excel
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\EmployeesExport;
+// untuk export file pdf
+use PDF;
 
 
 class EmployeeController extends Controller
@@ -21,28 +28,9 @@ class EmployeeController extends Controller
         //meyesuaikan kode program function index()
         $pageTitle = 'Employee List';
 
-        // //RAW SQL QUERY
-        // $employees = DB::select('
-        // select *, employees.id as employee_id, positions.name as position_name
-        // from employees
-        // left join positions on employees.position_id = positions.id'
-        // );
+        confirmDelete();
 
-        // // SQL QUERY BUILDER
-        // $employees = DB::table('employees')
-        //     ->select('employees.*', 'employees.id as employee_id', 'positions.name as position_name')
-        //     ->leftJoin('positions', 'employees.position_id', '=', 'positions.id')
-        //     ->get();
-
-        //ELOQUENT
-        $employees = Employee::all();
-
-        // Menampilkan hasil pada file index yang ada di view/employee
-        return view('employee.index', [
-            'pageTitle' => $pageTitle,
-            'employees' => $employees
-        ]);
-
+        return view('employee.index', compact('pageTitle'));
     }
 
     /**
@@ -128,6 +116,9 @@ class EmployeeController extends Controller
         }
 
         $employee->save();
+
+        // untuk sweet alert
+        Alert::success('Added Successfully', 'Employee Data Added Successfully.');
 
         return redirect()->route('employees.index');
     }
@@ -258,6 +249,9 @@ class EmployeeController extends Controller
 
         $employee->save();
 
+        // untuk sweet alert
+        Alert::success('Changed Successfully', 'Employee Data Changed Successfully.');
+
         // Setelah berhasil di update maka akan di redirect ke halaman index
         return redirect()->route('employees.index');
     }
@@ -278,6 +272,9 @@ class EmployeeController extends Controller
 
         $employee->delete();
 
+        // untuk sweet alert
+        Alert::success('Deleted Successfully', 'Employee Data Deleted Successfully.');
+
         return redirect()->route('employees.index');
     }
 
@@ -292,5 +289,36 @@ class EmployeeController extends Controller
         if(Storage::exists($encryptedFilename)) {
             return Storage::download($encryptedFilename, $downloadFilename);
         }
+    }
+
+    // server-side processing Data Tables
+    public function getData(Request $request)
+    {
+        $employees = Employee::with('position');
+
+        if ($request->ajax()) {
+            return datatables()->of($employees)
+                ->addIndexColumn()
+                ->addColumn('actions', function($employee) {
+                    return view('employee.actions', compact('employee'));
+                })
+                ->toJson();
+        }
+    }
+
+    // Untuk export file eexcel
+    public function exportExcel()
+    {
+        return Excel::download(new EmployeesExport, 'employees.xlsx');
+    }
+
+    // untuk export file pdf
+    public function exportPdf()
+    {
+        $employees = Employee::all();
+
+        $pdf = PDF::loadView('employee.export_pdf', compact('employees'));
+
+        return $pdf->download('employees.pdf');
     }
 }
